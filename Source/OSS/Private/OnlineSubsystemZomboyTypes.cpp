@@ -122,6 +122,6 @@ void UZomboyOSSFunctionLibrary::SetGameLiftClientRegion(EGameLiftRegion Region)
 	FOnlineSubsystemZomboy* OnlineSubZomboy = StaticCast<FOnlineSubsystemZomboy*>(IOnlineSubsystem::Get(FName("Zomboy")));
 	if (OnlineSubZomboy)
 	{
-		OnlineSubZomboy->GetGameLiftClient()->SetCurrentRegion(Region);
+		OnlineSubZomboy->SetGameLiftClientRegion(Region);
 	}
 }

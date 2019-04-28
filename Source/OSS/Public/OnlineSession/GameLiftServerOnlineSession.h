@@ -51,9 +51,14 @@ public:
 
 	void RequestBackfill(bool bFromFailure = false);
 
+	void ServerChangeDynamicProperties(const TMap<FName, FString>& NewGameProperties);
 	void ServerChangeMap(const TMap<FName, FString>& NewGameProperties);
 
 	bool IsMatchmakingServer() { return CurrentGameLiftServerSession.bIsMatchmakingServer; }
+	EGameLiftRegion GetServerRegion() { return CurrentGameLiftServerSession.Region; }
+	FString GetServerDynamicProperty(const FName& PropertyKey) { return CurrentGameLiftServerSession.GetGameSessionDynamicProperty(PropertyKey); }
+	FString GetServerStaticProperty(const FName& PropertyKey) { return CurrentGameLiftServerSession.GetGameSessionStaticProperty(PropertyKey); }
+
 
 public:
 	TMap<FString/*TeamName*/, TArray<FUniqueNetIdZomboyPlayer>/*Player NetId Array*/> PlayerTeamMap;

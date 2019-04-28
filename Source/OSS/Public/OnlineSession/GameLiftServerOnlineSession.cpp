@@ -643,7 +643,7 @@ void UGameLiftServerOnlineSession::RequestBackfill(bool bFromFailure)
 	}
 }
 
-void UGameLiftServerOnlineSession::ServerChangeMap(const TMap<FName, FString>& NewGameProperties)
+void UGameLiftServerOnlineSession::ServerChangeDynamicProperties(const TMap<FName, FString>& NewGameProperties)
 {
 	for (auto PropertyItem : NewGameProperties)
 	{
@@ -652,17 +652,21 @@ void UGameLiftServerOnlineSession::ServerChangeMap(const TMap<FName, FString>& N
 		CurrentGameLiftServerSession.DynamicProperties.Add(PropertyItem.Key, PropertyItem.Value);
 	}
 
+	if (!bIsHostingLan)
+	{
+		AdvertiseServerProperties();
+	}
+}
+
+void UGameLiftServerOnlineSession::ServerChangeMap(const TMap<FName, FString>& NewGameProperties)
+{
+	ServerChangeDynamicProperties(NewGameProperties);
+
 	FString ServerTravelURL = GetServerTravelURL(CurrentGameLiftServerSession);
 
 	if (GetWorld())
 	{
-		if (GetWorld()->ServerTravel(ServerTravelURL, false))
-		{
-			if (!bIsHostingLan)
-			{
-				AdvertiseServerProperties();
-			}
-		}
+		GetWorld()->ServerTravel(ServerTravelURL, false);	
 	}
 }
 
