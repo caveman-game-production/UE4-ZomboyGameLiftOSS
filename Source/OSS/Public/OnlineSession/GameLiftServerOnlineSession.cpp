@@ -212,7 +212,7 @@ void UGameLiftServerOnlineSession::AsyncOnServiceActivate(Aws::GameLift::Server:
 		GameLiftGameSession.StaticProperties.Add(Key, Value);
 	}
 
-	GameLiftGameSession.MatchmakingData = FString(GameSession.GetMatchmakerData());
+	GameLiftGameSession.MatchmakingData = FString(UTF8_TO_TCHAR(GameSession.GetMatchmakerData()));
 	GameLiftGameSession.bIsMatchmakingServer = !GameLiftGameSession.MatchmakingData.IsEmpty();
 
 	AsyncTask(ENamedThreads::GameThread, [=]()
@@ -687,7 +687,9 @@ FAttributeValue ToServerAttribute(const FClientAttributeValue& Attribute)
 	ServerAttribute.m_S = Attribute.m_S;
 	ServerAttribute.m_SL = Attribute.m_SL;
 	ServerAttribute.m_SDM = Attribute.m_SDM;
-	ServerAttribute.m_type = (FAttributeType)Attribute.m_type
+	ServerAttribute.m_type = (FAttributeType)Attribute.m_type;
+
+	return ServerAttribute;
 }
 
 #endif
