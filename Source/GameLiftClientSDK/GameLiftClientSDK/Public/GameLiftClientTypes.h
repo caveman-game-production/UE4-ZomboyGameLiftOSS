@@ -122,6 +122,7 @@ struct FGameLiftGameSessionServerProperties
 	FString Value;
 };
 
+
 USTRUCT(BlueprintType)
 struct FGameLiftGameSessionConfig
 {
@@ -219,4 +220,21 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	int MaxPlayerCount;
+};
+
+enum class FClientAttributeType : uint8
+{
+	NONE = 0,
+	STRING = 1,
+	DOUBLE = 2,
+	STRING_LIST = 3,
+	STRING_DOUBLE_MAP = 4
+};
+
+struct FClientAttributeValue {
+	FString m_S;
+	double m_N;
+	TArray<FString> m_SL;
+	TMap<FString, double> m_SDM;
+	FClientAttributeType m_type;
 };

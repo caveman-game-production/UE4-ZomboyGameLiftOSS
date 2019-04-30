@@ -14,10 +14,11 @@ UStartGameLiftMatchmakingCallbackProxy::UStartGameLiftMatchmakingCallbackProxy(c
 
 }
 
-UStartGameLiftMatchmakingCallbackProxy* UStartGameLiftMatchmakingCallbackProxy::StartGameLiftMatchmaking(UObject* WorldContextObject)
+UStartGameLiftMatchmakingCallbackProxy* UStartGameLiftMatchmakingCallbackProxy::StartGameLiftMatchmaking(UObject* WorldContextObject, const FZomboyGameliftMatchmakingSettingWrapper& MatchmakingSetting)
 {
 	UStartGameLiftMatchmakingCallbackProxy* Proxy = NewObject<UStartGameLiftMatchmakingCallbackProxy>();
 	Proxy->WorldContextObject = WorldContextObject;
+	Proxy->MatchmakingSetting = MatchmakingSetting;
 
 	return Proxy;
 }
@@ -43,7 +44,8 @@ void UStartGameLiftMatchmakingCallbackProxy::Activate()
 
 					OnMatchmakingCompleteDelegateHandle = Sessions->AddOnMatchmakingCompleteDelegate_Handle(OnMatchmakingCompleteDelegate);
 
-					TSharedRef<FOnlineSessionSearch> SearchSettings(new FOnlineSessionSearch());
+					TSharedRef<FOnlineSessionSearch> SearchSettings((FOnlineSessionSearch*)(new FOnlineSessionSearchZomboy(MatchmakingSetting.OnlineSessionSearchSetting)));
+
 					Sessions->StartMatchmaking(PlayerIds, GameSessionName, FOnlineSessionSettings(), SearchSettings);
 				}
 			}
@@ -63,8 +65,7 @@ void UStartGameLiftMatchmakingCallbackProxy::OnMatchmakingComplete(FName Session
 			Sessions->ClearOnMatchmakingCompleteDelegate_Handle(OnMatchmakingCompleteDelegateHandle);
 		}
 	}
-
-
+	
 	if (!bSuccessful)
 	{
 		OnFailure.Broadcast();

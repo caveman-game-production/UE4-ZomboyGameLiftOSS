@@ -174,6 +174,7 @@ private:
 	/** Name of session lobby */
 	FName SessionName;
 	const TArray<TSharedRef<const FUniqueNetId>> PlayerIds;
+	const TSharedRef<FOnlineSessionSearchZomboy> MatchmakingSettings;
 	FString GameSessionId;
 	FString MatchmakingTicket;
 
@@ -202,13 +203,14 @@ protected:
 	float QuerySessionTimeStamp = 0;
 
 public:
-	FOnlineAsyncTaskStartGameliftMatchmaking(class FOnlineSubsystemZomboy* InSubsystem, FName InSessionName, const TArray<TSharedRef<const FUniqueNetId>>& InPlayerIds) :
+	FOnlineAsyncTaskStartGameliftMatchmaking(class FOnlineSubsystemZomboy* InSubsystem, FName InSessionName, const TArray<TSharedRef<const FUniqueNetId>>& InPlayerIds, const TSharedRef<FOnlineSessionSearchZomboy>& InMatchmakingSettings) :
 		FOnlineAsyncTaskGameLift(InSubsystem),
 		GameLiftObject(NULL),
 		SessionName(InSessionName),
 		MatchmakingTicket(FString()),
 		GameSessionId(FString()),
 		PlayerIds(InPlayerIds),
+		MatchmakingSettings(InMatchmakingSettings),
 		StartMatchmakingObject(NULL),
 		DescribeMatchmakingObject(NULL)
 	{

@@ -222,13 +222,14 @@ void FDescribeGameLiftGameSessionPlacement::OnDescribeSessionPlacement(const Aws
 	}
 }
 
-TSharedPtr<FStartGameLiftMatchmaking, ESPMode::ThreadSafe> FStartGameLiftMatchmaking::StartMatchmaking(const FString& ConfigName, const TArray<TSharedRef<const FUniqueNetId>>& PlayerIds, FString MatchmakingTicketId)
+TSharedPtr<FStartGameLiftMatchmaking, ESPMode::ThreadSafe> FStartGameLiftMatchmaking::StartMatchmaking(const FString& ConfigName, const TArray<TSharedRef<const FUniqueNetId>>& PlayerIds, FString MatchmakingTicketId, const TMap<FName, FClientAttributeValue>& PlayerAttributes)
 {
 #if WITH_GAMELIFTCLIENTSDK
 	TSharedPtr<FStartGameLiftMatchmaking, ESPMode::ThreadSafe> Proxy = MakeShareable(new FStartGameLiftMatchmaking());
 	Proxy->ConfigName = ConfigName;
 	Proxy->PlayerIds = PlayerIds;
 	Proxy->MatchmakingTicketId = MatchmakingTicketId;
+	Proxy->PlayerAttributes = PlayerAttributes;
 	return Proxy;
 #endif
 	return nullptr;
@@ -263,6 +264,52 @@ EActivateStatus FStartGameLiftMatchmaking::Activate()
 			Aws::GameLift::Model::Player AwsPlayer;
 			AwsPlayer.SetPlayerId(TCHAR_TO_UTF8(*PlayerId->ToString()));
 			AwsPlayer.SetLatencyInMs(RegionLatency);
+
+			for (const auto& PlayerAttribute : PlayerAttributes)
+			{
+				Aws::String AwsKey = TCHAR_TO_UTF8(*PlayerAttribute.Key.ToString());
+				const FClientAttributeValue& Value = PlayerAttribute.Value;
+				switch (Value.m_type)
+				{
+					case FClientAttributeType::DOUBLE:
+					{
+						Aws::GameLift::Model::AttributeValue AwsValue;
+						AwsValue.SetN(Value.m_N);
+						AwsPlayer.AddPlayerAttributes(AwsKey, AwsValue);
+					}
+					break;
+
+					case FClientAttributeType::STRING:
+					{
+						Aws::GameLift::Model::AttributeValue AwsValue;
+						AwsValue.SetS(TCHAR_TO_UTF8(*Value.m_S));
+						AwsPlayer.AddPlayerAttributes(AwsKey, AwsValue);
+					}
+
+					case FClientAttributeType::STRING_LIST:
+					{
+						Aws::GameLift::Model::AttributeValue AwsValue;
+						for (auto sl : Value.m_SL) 
+						{
+							AwsValue.AddSL(TCHAR_TO_UTF8(*sl));
+						}
+						AwsPlayer.AddPlayerAttributes(AwsKey, AwsValue);
+					}
+					break;
+					
+					case FClientAttributeType::STRING_DOUBLE_MAP:
+					{
+						Aws::GameLift::Model::AttributeValue AwsValue;
+						for (auto sdm : Value.m_SDM)
+						{
+							AwsValue.AddSDM(TCHAR_TO_UTF8(*sdm.Key), sdm.Value);
+						}
+						AwsPlayer.AddPlayerAttributes(AwsKey, AwsValue);
+					}
+					break;
+				}
+			}
+
 			MatchmakingPlayers.push_back(AwsPlayer);
 		}		
 	}

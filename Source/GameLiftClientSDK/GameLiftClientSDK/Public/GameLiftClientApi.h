@@ -100,8 +100,10 @@ private:
 	TArray<TSharedRef<const FUniqueNetId>> PlayerIds;
 	Aws::Map<Aws::String, int> RegionLatency;
 	FString MatchmakingTicketId;
+	//TArray<TSharedPtr<FGameLiftPlayerAttribute>> PlayerAttributes;
+	TMap<FName, FClientAttributeValue> PlayerAttributes;
 
-	static TSharedPtr<FStartGameLiftMatchmaking, ESPMode::ThreadSafe> StartMatchmaking(const FString& ConfigName, const TArray<TSharedRef<const FUniqueNetId>>& PlayerIds, FString MatchmakingTicketId);
+	static TSharedPtr<FStartGameLiftMatchmaking, ESPMode::ThreadSafe> StartMatchmaking(const FString& ConfigName, const TArray<TSharedRef<const FUniqueNetId>>& PlayerIds, FString MatchmakingTicketId, const TMap<FName, FClientAttributeValue>& PlayerAttributes);
 
 public:
 	void ChangeMatchmakingTicket(const FString& NewMatchmakingTicketId);

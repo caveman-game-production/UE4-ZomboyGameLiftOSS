@@ -506,7 +506,7 @@ void FOnlineAsyncTaskStartGameliftMatchmaking::TaskThreadInit()
 
 			Session->SessionInfo = MakeShareable(NewSessionInfo);
 
-			StartMatchmakingObject = GameLiftObject->StartMatchmaking(Subsystem->GetGameLiftMatchmakingConfigName(), PlayerIds, MatchmakingTicket);
+			StartMatchmakingObject = GameLiftObject->StartMatchmaking(Subsystem->GetGameLiftMatchmakingConfigName(), PlayerIds, MatchmakingTicket, MatchmakingSettings->GameLiftPlayerAttributes);
 			StartMatchmakingObject->OnStartMatchmakingSuccessDelegate.BindRaw(this, &FOnlineAsyncTaskStartGameliftMatchmaking::OnStartMatchmakingSuccess);
 			StartMatchmakingObject->OnStartMatchmakingFailedDelegate.BindRaw(this, &FOnlineAsyncTaskStartGameliftMatchmaking::OnStartMatchmakingFailed);
 			if (StartMatchmakingObject->Activate() != EActivateStatus::ACTIVATE_Success)

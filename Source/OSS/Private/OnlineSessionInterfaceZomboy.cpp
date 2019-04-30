@@ -592,7 +592,9 @@ bool FOnlineSessionZomboy::StartMatchmaking(const TArray< TSharedRef<const FUniq
 		check(Session);
 		Session->SessionState = EOnlineSessionState::Creating;
 
-		FOnlineAsyncTaskStartGameliftMatchmaking* NewTask = new FOnlineAsyncTaskStartGameliftMatchmaking(ZomboySubsystem, SessionName, LocalPlayers);
+		TSharedRef<FOnlineSessionSearchZomboy> MatchmakingSettings = StaticCastSharedRef<FOnlineSessionSearchZomboy>(SearchSettings);
+
+		FOnlineAsyncTaskStartGameliftMatchmaking* NewTask = new FOnlineAsyncTaskStartGameliftMatchmaking(ZomboySubsystem, SessionName, LocalPlayers, MatchmakingSettings);
 		ZomboySubsystem->QueueAsyncTask(NewTask);
 
 		Result = ERROR_IO_PENDING;

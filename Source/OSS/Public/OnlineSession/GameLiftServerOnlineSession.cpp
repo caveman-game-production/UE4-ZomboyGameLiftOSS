@@ -542,6 +542,14 @@ EGameLiftRegion UGameLiftServerOnlineSession::GetPlayerRegion(class APlayerState
 	return EGameLiftRegion::EGameLiftRegion_NA;
 }
 
+
+
+TMap<FString, FClientAttributeValue> UGameLiftServerOnlineSession::GetPlayerAttributes(class APlayerState* PlayerState)
+{
+	TMap<FString, FClientAttributeValue> Empty;
+	return Empty;
+}
+
 void UGameLiftServerOnlineSession::ProcessGameSessionReady(FGameLiftServerGameSession& GameLiftGameSession)
 {
 
@@ -670,6 +678,20 @@ void UGameLiftServerOnlineSession::ServerChangeMap(const TMap<FName, FString>& N
 	}
 }
 
+#if WITH_GAMELIFT_SERVER
+
+FAttributeValue ToServerAttribute(const FClientAttributeValue& Attribute)
+{
+	FAttributeValue ServerAttribute;
+	ServerAttribute.m_N = Attribute.m_N;
+	ServerAttribute.m_S = Attribute.m_S;
+	ServerAttribute.m_SL = Attribute.m_SL;
+	ServerAttribute.m_SDM = Attribute.m_SDM;
+	ServerAttribute.m_type = (FAttributeType)Attribute.m_type
+}
+
+#endif
+
 
 void UGameLiftServerOnlineSession::TryStartMatchmakingBackfillRequest()
 {
@@ -716,6 +738,14 @@ void UGameLiftServerOnlineSession::TryStartMatchmakingBackfillRequest()
 				}
 
 				MatchmakingPlayer.m_latencyInMs = GetRegionLatency(GetPlayerRegion(PlayerState));
+
+				TMap<FString, FClientAttributeValue> PlayerAttribuates = GetPlayerAttributes(PlayerState);
+				for (const auto& PlayerAttribute : PlayerAttribuates)
+				{
+					FAttributeValue ServerAttributeValue = ToServerAttribute(PlayerAttribute.Value);
+					MatchmakingPlayer.m_playerAttributes.Add(PlayerAttribute.Key, ServerAttributeValue);
+				}
+
 
 				MatchmakingPlayers.Add(MatchmakingPlayer);
 			}

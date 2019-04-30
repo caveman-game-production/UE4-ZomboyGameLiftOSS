@@ -51,7 +51,7 @@ public:
 
 	TSharedPtr<class FDescribeGameLiftGameSessionPlacement, ESPMode::ThreadSafe> DescribeGameSessionPlacement(const FString& UniqueId);
 
-	TSharedPtr<class FStartGameLiftMatchmaking, ESPMode::ThreadSafe> StartMatchmaking(const FString& ConfigName, const TArray<TSharedRef<const FUniqueNetId>>& PlayerIds, const FString& MatchmakingTicket);
+	TSharedPtr<class FStartGameLiftMatchmaking, ESPMode::ThreadSafe> StartMatchmaking(const FString& ConfigName, const TArray<TSharedRef<const FUniqueNetId>>& PlayerIds, const FString& MatchmakingTicket, const TMap<FName, FClientAttributeValue>& PlayerAttributes);
 
 	TSharedPtr<class FStopGameLiftMatchmaking, ESPMode::ThreadSafe> StopMatchmaking(const FString& MatchmakingTicket);
 

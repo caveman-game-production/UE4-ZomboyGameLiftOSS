@@ -66,11 +66,11 @@ struct GAMELIFTSERVERSDK_API FProcessParameters {
 
 enum class FAttributeType : uint8
 {
-    NONE,
-    STRING,
-    DOUBLE,
-    STRING_LIST,
-    STRING_DOUBLE_MAP
+    NONE = 0,
+    STRING = 1,
+    DOUBLE = 2,
+    STRING_LIST = 3,
+    STRING_DOUBLE_MAP = 4
 };
 
 struct GAMELIFTSERVERSDK_API FAttributeValue {

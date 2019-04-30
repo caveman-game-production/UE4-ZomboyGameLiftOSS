@@ -23,7 +23,7 @@ class UStartGameLiftMatchmakingCallbackProxy : public UOnlineBlueprintCallProxyB
 
 	// Creates a session with the default online subsystem
 	UFUNCTION(BlueprintCallable, meta=(BlueprintInternalUseOnly = "true", WorldContext="WorldContextObject"), Category = "Online|Session")
-	static UStartGameLiftMatchmakingCallbackProxy* StartGameLiftMatchmaking(UObject* WorldContextObject);
+	static UStartGameLiftMatchmakingCallbackProxy* StartGameLiftMatchmaking(UObject* WorldContextObject, const FZomboyGameliftMatchmakingSettingWrapper& MatchmakingSetting);
 
 	// UOnlineBlueprintCallProxyBase interface
 	virtual void Activate() override;
@@ -38,5 +38,6 @@ private:
 
 	// The world context object in which this call is taking place
 	UObject* WorldContextObject;
+	FZomboyGameliftMatchmakingSettingWrapper MatchmakingSetting;
 
 };

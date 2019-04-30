@@ -8,6 +8,7 @@
 #include "OnlineSessionSettings.h"
 #include "Engine/Texture2DDynamic.h"
 #include "Runtime/RenderCore/Public/RenderingThread.h"
+#include "GameLiftClientTypes.h"
 #include <string>
 #include <codecvt>
 
@@ -190,6 +191,22 @@ public:
 		return SessionId;
 	}
 };
+
+class FOnlineSessionSearchZomboy : FOnlineSessionSearch
+{
+public:
+	TMap<FName, FClientAttributeValue> GameLiftPlayerAttributes;
+};
+
+USTRUCT(BlueprintType)
+struct FZomboyGameliftMatchmakingSettingWrapper
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+	FOnlineSessionSearchZomboy OnlineSessionSearchSetting;
+};
+
 
 UENUM(BlueprintType)
 enum class EGameLiftGameSessionSettingType : uint8

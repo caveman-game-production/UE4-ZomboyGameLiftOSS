@@ -114,10 +114,10 @@ TSharedPtr<FDescribeGameLiftGameSessionPlacement, ESPMode::ThreadSafe> FGameLift
 	return nullptr;
 }
 
-TSharedPtr<FStartGameLiftMatchmaking, ESPMode::ThreadSafe> FGameLiftClientObject::StartMatchmaking(const FString& ConfigName, const TArray<TSharedRef<const FUniqueNetId>>& PlayerIds, const FString& MatchmakingTicket)
+TSharedPtr<FStartGameLiftMatchmaking, ESPMode::ThreadSafe> FGameLiftClientObject::StartMatchmaking(const FString& ConfigName, const TArray<TSharedRef<const FUniqueNetId>>& PlayerIds, const FString& MatchmakingTicket, const TMap<FName, FClientAttributeValue>& PlayerAttributes)
 {
 #if WITH_GAMELIFTCLIENTSDK
-	TSharedPtr<FStartGameLiftMatchmaking, ESPMode::ThreadSafe> Proxy = FStartGameLiftMatchmaking::StartMatchmaking(ConfigName, PlayerIds, MatchmakingTicket);
+	TSharedPtr<FStartGameLiftMatchmaking, ESPMode::ThreadSafe> Proxy = FStartGameLiftMatchmaking::StartMatchmaking(ConfigName, PlayerIds, MatchmakingTicket, PlayerAttributes);
 	Proxy->GameLiftClient = GetClientFromRegion(EGameLiftRegion::EGameLiftRegion_NA);
 	Proxy->RegionLatency = GetRegionLatencyAWS(GetCurrentRegion());
 

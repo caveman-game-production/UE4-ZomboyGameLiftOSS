@@ -89,6 +89,8 @@ protected:
 
 	virtual int GetPlayerTeamNumber(class APlayerState* PlayerState);
 	virtual EGameLiftRegion GetPlayerRegion(class APlayerState* PlayerState);
+	virtual TMap<FString, FClientAttributeValue> GetPlayerAttributes(class APlayerState* PlayerState);
+
 
 	void TryStartMatchmakingBackfillRequest();
 	void AdvertiseServerProperties();
