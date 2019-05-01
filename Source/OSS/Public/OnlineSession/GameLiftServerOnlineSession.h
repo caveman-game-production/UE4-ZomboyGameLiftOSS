@@ -58,7 +58,7 @@ public:
 	EGameLiftRegion GetServerRegion() { return CurrentGameLiftServerSession.Region; }
 	FString GetServerDynamicProperty(const FName& PropertyKey) { return CurrentGameLiftServerSession.GetGameSessionDynamicProperty(PropertyKey); }
 	FString GetServerStaticProperty(const FName& PropertyKey) { return CurrentGameLiftServerSession.GetGameSessionStaticProperty(PropertyKey); }
-
+	FString GatServerMatchmakingData() { return CurrentGameLiftServerSession.MatchmakingData; }
 
 public:
 	TMap<FString/*TeamName*/, TArray<FUniqueNetIdZomboyPlayer>/*Player NetId Array*/> PlayerTeamMap;

@@ -586,6 +586,35 @@ void FOnlineAsyncTaskStartGameliftMatchmaking::OnDescribeMatchmakingSuccess(Aws:
 
 void FOnlineAsyncTaskStartGameliftMatchmaking::OnDescribeMatchmakingFailed(const FString& ErrorMessage, Aws::GameLift::Model::MatchmakingConfigurationStatus Status, bool bCriticalFailure)
 {
+	if (Status == Aws::GameLift::Model::MatchmakingConfigurationStatus::FAILED
+		|| Status == Aws::GameLift::Model::MatchmakingConfigurationStatus::TIMED_OUT)
+	{
+		if (StartMatchmakingObject.IsValid())
+		{
+			FOnlineSessionZomboyPtr SessionInt = StaticCastSharedPtr<FOnlineSessionZomboy>(Subsystem->GetSessionInterface());
+			if (FNamedOnlineSession* Session = SessionInt->GetNamedSession(SessionName))
+			{
+				TSharedPtr<FOnlineSessionInfoZomboy> ZomboySessionInfo = StaticCastSharedPtr<FOnlineSessionInfoZomboy>(Session->SessionInfo);
+				if (ZomboySessionInfo.IsValid())
+				{
+					FGuid MatchmakingTicketGUID = FGuid::NewGuid();
+					MatchmakingTicket = MatchmakingTicketGUID.ToString();
+
+					ZomboySessionInfo->GameLiftMatchmakingTicket = MatchmakingTicket;
+
+					StartMatchmakingObject->ChangeMatchmakingTicket(MatchmakingTicket);
+					UE_LOG(LogTemp, Log, TEXT("Resubmiting matchmaking request."));
+
+					if (StartMatchmakingObject->Activate() != EActivateStatus::ACTIVATE_Success)
+					{
+						FinishTaskThread(false);
+					}
+					return;
+				}
+			}
+		}
+	}
+
 	UE_LOG(LogTemp, Log, TEXT("OnDescribeMatchmakingFailed: %s"), *ErrorMessage);
 	FinishTaskThread(false);
 }

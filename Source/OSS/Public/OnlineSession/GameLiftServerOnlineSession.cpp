@@ -480,7 +480,7 @@ void UGameLiftServerOnlineSession::SetServerRegion(const FString& SessionID)
 
 void UGameLiftServerOnlineSession::BuildPlayerMatchmakingReservation(const FString& MatchmakingData)
 {
-	PlayerTeamMap.Empty();
+	//PlayerTeamMap.Empty();
 
 	TSharedPtr<FJsonObject> MatchmakingDataObject = MakeShareable(new FJsonObject());
 	TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(MatchmakingData);
@@ -495,7 +495,7 @@ void UGameLiftServerOnlineSession::BuildPlayerMatchmakingReservation(const FStri
 			const TArray<TSharedPtr<FJsonValue>>* TeamJsonFieldArray;
 			if (MatchmakingDataObject->TryGetArrayField(TEXT("teams"), TeamJsonFieldArray))
 			{
-				for (TSharedPtr<FJsonValue> TeamJsonFiled : *TeamJsonFieldArray)
+				for (const TSharedPtr<FJsonValue>& TeamJsonFiled : *TeamJsonFieldArray)
 				{
 					TSharedPtr<FJsonObject> TeamObject = TeamJsonFiled->AsObject();
 					if (TeamObject.IsValid())
@@ -506,11 +506,12 @@ void UGameLiftServerOnlineSession::BuildPlayerMatchmakingReservation(const FStri
 							UE_LOG(LogTemp, Log, TEXT("Team Name: %s"), *TeamName);
 
 							TArray<FUniqueNetIdZomboyPlayer>& TeamPlayers = PlayerTeamMap.FindOrAdd(TeamName);
+							TeamPlayers.Empty();
 
 							const TArray<TSharedPtr<FJsonValue>>* PlayerJsonFieldArray;
 							if (TeamObject->TryGetArrayField(TEXT("players"), PlayerJsonFieldArray))
 							{
-								for (TSharedPtr<FJsonValue> PlayerJsonField : *PlayerJsonFieldArray)
+								for (const TSharedPtr<FJsonValue>& PlayerJsonField : *PlayerJsonFieldArray)
 								{
 									TSharedPtr<FJsonObject> PlayerJsonObject = PlayerJsonField->AsObject();
 									if (PlayerJsonObject.IsValid())

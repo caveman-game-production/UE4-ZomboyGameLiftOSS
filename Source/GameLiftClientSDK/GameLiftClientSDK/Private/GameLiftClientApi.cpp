@@ -417,6 +417,7 @@ void FDescribeGameLiftMatchmaking::OnDescribeMatchmakingComplete(const  Aws::Gam
 			Aws::GameLift::Model::MatchmakingConfigurationStatus Status = TicketResult.GetStatus();
 
 			if (Status != Aws::GameLift::Model::MatchmakingConfigurationStatus::FAILED
+				&& Status != Aws::GameLift::Model::MatchmakingConfigurationStatus::NOT_SET
 				&& Status != Aws::GameLift::Model::MatchmakingConfigurationStatus::CANCELLED
 				&& Status != Aws::GameLift::Model::MatchmakingConfigurationStatus::TIMED_OUT)
 			{
