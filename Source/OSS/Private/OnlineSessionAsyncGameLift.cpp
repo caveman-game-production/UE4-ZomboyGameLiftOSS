@@ -577,6 +577,8 @@ void FOnlineAsyncTaskStartGameliftMatchmaking::OnDescribeMatchmakingSuccess(Aws:
 	{
 		if (Status == Aws::GameLift::Model::MatchmakingConfigurationStatus::REQUIRES_ACCEPTANCE)
 		{
+			UE_LOG(LogTemp, Log, TEXT("MatchmakingConfigurationStatus:REQUIRES_ACCEPTANCE"))
+
 			if (!bMatchAccepted)
 			{
 				if (StartMatchmakingObject.IsValid())
@@ -585,6 +587,10 @@ void FOnlineAsyncTaskStartGameliftMatchmaking::OnDescribeMatchmakingSuccess(Aws:
 					bMatchAccepted = true;
 				}
 			}
+		}
+		else
+		{
+			bMatchAccepted = false;
 		}
 
 		if (DescribeMatchmakingObject->Activate() != EActivateStatus::ACTIVATE_Success)
