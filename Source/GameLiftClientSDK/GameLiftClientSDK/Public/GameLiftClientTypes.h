@@ -33,31 +33,41 @@ constexpr TCHAR* GetRegionString(EGameLiftRegion Region)
 {
 	switch (Region)
 	{
-		case EGameLiftRegion::EGameLiftRegion_APJ:
-		{
-			return TEXT("ap-northeast-1");
-		}
-		break;
-
 		case EGameLiftRegion::EGameLiftRegion_NA:
 		{
 			return TEXT("us-east-1");
 		}
 		break;
+
+		case EGameLiftRegion::EGameLiftRegion_EU:
+		{
+			return TEXT("eu-central-1");
+		}
+		break;
+
+		case EGameLiftRegion::EGameLiftRegion_APJ:
+		{
+			return TEXT("ap-northeast-1");
+		}
+		break;
 	}
 
-	return TEXT("ap-northeast-1");
+	return TEXT("us-east-1");
 }
 
 inline EGameLiftRegion GetRegion(const TCHAR* RegionString)
 {
-	if (FCString::Strcmp(RegionString, TEXT("ap-northeast-1")) == 0)
-	{
-		return EGameLiftRegion::EGameLiftRegion_APJ;
-	}
-	else if (FCString::Strcmp(RegionString, TEXT("us-east-1")) == 0)
+	if (FCString::Strcmp(RegionString, TEXT("us-east-1")) == 0)
 	{
 		return EGameLiftRegion::EGameLiftRegion_NA;
+	}
+	else if (FCString::Strcmp(RegionString, TEXT("eu-central-1")) == 0)
+	{
+		return EGameLiftRegion::EGameLiftRegion_EU;
+	}
+	else if (FCString::Strcmp(RegionString, TEXT("ap-northeast-1")) == 0)
+	{
+		return EGameLiftRegion::EGameLiftRegion_APJ;
 	}
 
 	return EGameLiftRegion::EGameLiftRegion_None;
@@ -68,17 +78,27 @@ static Aws::Map<Aws::String, int> GetRegionLatencyAWS(EGameLiftRegion Region)
 	Aws::Map<Aws::String, int> LatencyMap;
 	switch (Region)
 	{
-	case EGameLiftRegion::EGameLiftRegion_APJ:
-	{
-		LatencyMap.emplace(TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_APJ)), 30);
-		LatencyMap.emplace(TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_NA)), 150);
-	}
-	break;
-
 	case EGameLiftRegion::EGameLiftRegion_NA:
 	{
 		LatencyMap.emplace(TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_NA)), 30);
+		LatencyMap.emplace(TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_EU)), 100);
 		LatencyMap.emplace(TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_APJ)), 150);
+	}
+	break;
+
+	case EGameLiftRegion::EGameLiftRegion_EU:
+	{
+		LatencyMap.emplace(TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_EU)), 30);
+		LatencyMap.emplace(TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_NA)), 100);
+		LatencyMap.emplace(TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_APJ)), 150);
+	}
+	break;
+
+	case EGameLiftRegion::EGameLiftRegion_APJ:
+	{
+		LatencyMap.emplace(TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_APJ)), 30);
+		LatencyMap.emplace(TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_NA)), 100);
+		LatencyMap.emplace(TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_EU)), 150);
 	}
 	break;
 
@@ -92,20 +112,29 @@ static TMap<FString, int32> GetRegionLatency(EGameLiftRegion Region)
 	TMap<FString, int32> LatencyMap;
 	switch (Region)
 	{
-	case EGameLiftRegion::EGameLiftRegion_APJ:
-	{
-		LatencyMap.Emplace(GetRegionString(EGameLiftRegion::EGameLiftRegion_APJ), 30);
-		LatencyMap.Emplace(GetRegionString(EGameLiftRegion::EGameLiftRegion_NA), 200);
-	}
-	break;
-
 	case EGameLiftRegion::EGameLiftRegion_NA:
 	{
 		LatencyMap.Emplace(GetRegionString(EGameLiftRegion::EGameLiftRegion_NA), 30);
-		LatencyMap.Emplace(GetRegionString(EGameLiftRegion::EGameLiftRegion_APJ), 200);
+		LatencyMap.Emplace(GetRegionString(EGameLiftRegion::EGameLiftRegion_EU), 100);
+		LatencyMap.Emplace(GetRegionString(EGameLiftRegion::EGameLiftRegion_APJ), 150);
 	}
 	break;
 
+	case EGameLiftRegion::EGameLiftRegion_EU:
+	{
+		LatencyMap.Emplace(GetRegionString(EGameLiftRegion::EGameLiftRegion_EU), 30);
+		LatencyMap.Emplace(GetRegionString(EGameLiftRegion::EGameLiftRegion_NA), 100);
+		LatencyMap.Emplace(GetRegionString(EGameLiftRegion::EGameLiftRegion_APJ), 150);
+	}
+	break;
+
+	case EGameLiftRegion::EGameLiftRegion_APJ:
+	{
+		LatencyMap.Emplace(GetRegionString(EGameLiftRegion::EGameLiftRegion_APJ), 30);
+		LatencyMap.Emplace(GetRegionString(EGameLiftRegion::EGameLiftRegion_NA), 100);
+		LatencyMap.Emplace(GetRegionString(EGameLiftRegion::EGameLiftRegion_EU), 150);
+	}
+	break;
 	}
 
 	return LatencyMap;

@@ -562,7 +562,7 @@ bool FOnlineSubsystemZomboy::Init()
 		FString AccessKey, Secret;
 		ConfigureGameLiftInit(AccessKey, Secret, GameLiftMatchmakingConfigName, GameLiftSessionQueueName);
 		//Create Gamelift Client Object
-		GameLiftClient = FGameLiftClientObject::CreateGameLiftObject(AccessKey, Secret, EGameLiftRegion::EGameLiftRegion_APJ, GAMELIFT_LOCAL, 8080);
+		GameLiftClient = FGameLiftClientObject::CreateGameLiftObject(AccessKey, Secret, EGameLiftRegion::EGameLiftRegion_NA, GAMELIFT_LOCAL, 8080);
 #endif
 
 #if WITH_GAMELIFT_SERVER

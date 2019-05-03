@@ -67,17 +67,20 @@ void FGameLiftClientObject::Internal_InitGameLiftClientSDK(const FString& Access
 	}
 
 	Credentials = Aws::Auth::AWSCredentials(TCHAR_TO_UTF8(*AccessKey), TCHAR_TO_UTF8(*Secret));
-	//GameLiftClient = new Aws::GameLift::GameLiftClient(Credentials, ClientConfig);
 
 	CurrentRegion = Region;
-
-	ClientConfig.region = TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_APJ));
-	Aws::GameLift::GameLiftClient* GameLiftClientAPJ = new Aws::GameLift::GameLiftClient(Credentials, ClientConfig);
-	GameLiftClientMap.emplace(ClientConfig.region, GameLiftClientAPJ);
 
 	ClientConfig.region = TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_NA));
 	Aws::GameLift::GameLiftClient* GameLiftClientNA = new Aws::GameLift::GameLiftClient(Credentials, ClientConfig);
 	GameLiftClientMap.emplace(ClientConfig.region, GameLiftClientNA);
+
+	ClientConfig.region = TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_EU));
+	Aws::GameLift::GameLiftClient* GameLiftClientEU = new Aws::GameLift::GameLiftClient(Credentials, ClientConfig);
+	GameLiftClientMap.emplace(ClientConfig.region, GameLiftClientEU);
+
+	ClientConfig.region = TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_APJ));
+	Aws::GameLift::GameLiftClient* GameLiftClientAPJ = new Aws::GameLift::GameLiftClient(Credentials, ClientConfig);
+	GameLiftClientMap.emplace(ClientConfig.region, GameLiftClientAPJ);
 
 	GameLiftClient = GameLiftClientMap.find(TCHAR_TO_UTF8(GetRegionString(Region)))->second;
 
