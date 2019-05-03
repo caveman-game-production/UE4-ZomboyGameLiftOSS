@@ -177,6 +177,7 @@ private:
 	const TSharedRef<FOnlineSessionSearchZomboy> MatchmakingSettings;
 	FString GameSessionId;
 	FString MatchmakingTicket;
+	bool bMatchAccepted;
 
 	/** Hidden on purpose */
 	FOnlineAsyncTaskStartGameliftMatchmaking() :

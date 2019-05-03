@@ -108,6 +108,7 @@ private:
 public:
 	void ChangeMatchmakingTicket(const FString& NewMatchmakingTicketId);
 	EActivateStatus Activate();
+	void AcceptMatch();
 
 private:
 	void OnGameLiftMatchmakingComplete(const Aws::GameLift::GameLiftClient* Client, const Aws::GameLift::Model::StartMatchmakingRequest& Request, const Aws::GameLift::Model::StartMatchmakingOutcome& Outcome, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& Context);

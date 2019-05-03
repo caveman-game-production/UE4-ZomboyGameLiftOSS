@@ -23,9 +23,10 @@ enum class EGameLiftGameSessionStatus : uint8
 UENUM(BlueprintType)
 enum class EGameLiftRegion : uint8
 {
-	EGameLiftRegion_None		UMETA(DisplayName = "None"),
+	EGameLiftRegion_None	UMETA(DisplayName = "None"),
+	EGameLiftRegion_NA		UMETA(DisplayName = "NA"),
+	EGameLiftRegion_EU		UMETA(DisplayName = "EU"),
 	EGameLiftRegion_APJ		UMETA(DisplayName = "APJ"),
-	EGameLiftRegion_NA		UMETA(DisplayName = "NA")
 };
 
 constexpr TCHAR* GetRegionString(EGameLiftRegion Region)
@@ -70,14 +71,14 @@ static Aws::Map<Aws::String, int> GetRegionLatencyAWS(EGameLiftRegion Region)
 	case EGameLiftRegion::EGameLiftRegion_APJ:
 	{
 		LatencyMap.emplace(TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_APJ)), 30);
-		LatencyMap.emplace(TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_NA)), 200);
+		LatencyMap.emplace(TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_NA)), 150);
 	}
 	break;
 
 	case EGameLiftRegion::EGameLiftRegion_NA:
 	{
 		LatencyMap.emplace(TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_NA)), 30);
-		LatencyMap.emplace(TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_APJ)), 200);
+		LatencyMap.emplace(TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_APJ)), 150);
 	}
 	break;
 

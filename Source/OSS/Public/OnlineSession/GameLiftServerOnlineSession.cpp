@@ -249,6 +249,12 @@ void UGameLiftServerOnlineSession::AsyncOnServiceUpdate(Aws::GameLift::Server::M
 				{
 					RequestBackfill();
 				}
+
+				if (UpdateGameSession.GetUpdateReason() == Aws::GameLift::Server::Model::UpdateReason::BACKFILL_TIMED_OUT)
+				{
+					UE_LOG(LogTemp, Log, TEXT("----------------AsyncOnServiceUpdate Request new backfill due to timeout."));
+				}
+
 			}
 		}
 	

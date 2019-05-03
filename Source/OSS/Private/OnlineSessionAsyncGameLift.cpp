@@ -572,6 +572,19 @@ void FOnlineAsyncTaskStartGameliftMatchmaking::OnDescribeMatchmakingSuccess(Aws:
 			}
 		}
 	}
+	else if (Status == Aws::GameLift::Model::MatchmakingConfigurationStatus::REQUIRES_ACCEPTANCE)
+	{
+		if (!bMatchAccepted)
+		{
+			if (StartMatchmakingObject.IsValid())
+			{
+				StartMatchmakingObject->AcceptMatch();
+				bMatchAccepted = true;
+			}
+		}
+
+		return;
+	}
 	else
 	{
 		if (DescribeMatchmakingObject->Activate() != EActivateStatus::ACTIVATE_Success)
@@ -609,6 +622,8 @@ void FOnlineAsyncTaskStartGameliftMatchmaking::OnDescribeMatchmakingFailed(const
 					{
 						FinishTaskThread(false);
 					}
+					bMatchAccepted = false;
+
 					return;
 				}
 			}

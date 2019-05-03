@@ -17,6 +17,7 @@
 #include "aws/gamelift/model/DescribeGameSessionsRequest.h"
 #include "aws/gamelift/model/StartGameSessionPlacementRequest.h"
 #include "aws/gamelift/model/DescribeGameSessionPlacementRequest.h"
+#include "aws/gamelift/model/AcceptMatchRequest.h"
 #include "aws/gamelift/model/StartMatchmakingRequest.h"
 #include "aws/gamelift/model/DescribeMatchmakingRequest.h"
 #include "aws/gamelift/model/StopMatchmakingRequest.h"
@@ -333,12 +334,28 @@ EActivateStatus FStartGameLiftMatchmaking::Activate()
 	return EActivateStatus::ACTIVATE_NoGameLift;
 }
 
+void FStartGameLiftMatchmaking::AcceptMatch()
+{
+	Aws::GameLift::Model::AcceptMatchRequest Request;
+	Request.SetTicketId(TCHAR_TO_UTF8(*MatchmakingTicketId));
+
+	Aws::Vector<Aws::String> AcceptingPlayers;
+	for (TSharedRef<const FUniqueNetId> PlayerId : PlayerIds)
+	{
+		Aws::String PlayerIdStr = TCHAR_TO_UTF8(*PlayerId->ToString());
+		AcceptingPlayers.push_back(PlayerIdStr);
+	}
+	Request.SetPlayerIds(AcceptingPlayers);
+	Request.SetAcceptanceType(Aws::GameLift::Model::AcceptanceType::ACCEPT);
+}
+
 void FStartGameLiftMatchmaking::OnGameLiftMatchmakingComplete(const Aws::GameLift::GameLiftClient* Client, const Aws::GameLift::Model::StartMatchmakingRequest& Request, const Aws::GameLift::Model::StartMatchmakingOutcome& Outcome, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& Context)
 {
 	if (Outcome.IsSuccess())
 	{
 		Aws::GameLift::Model::MatchmakingConfigurationStatus Status = Outcome.GetResult().GetMatchmakingTicket().GetStatus();
 		if (Status != Aws::GameLift::Model::MatchmakingConfigurationStatus::FAILED
+			&& Status != Aws::GameLift::Model::MatchmakingConfigurationStatus::NOT_SET
 			&& Status != Aws::GameLift::Model::MatchmakingConfigurationStatus::CANCELLED
 			&& Status != Aws::GameLift::Model::MatchmakingConfigurationStatus::TIMED_OUT)
 		{
@@ -406,6 +423,7 @@ EActivateStatus FDescribeGameLiftMatchmaking::Activate()
 
 	return EActivateStatus::ACTIVATE_NoGameLift;
 }
+
 
 void FDescribeGameLiftMatchmaking::OnDescribeMatchmakingComplete(const  Aws::GameLift::GameLiftClient* Client, const  Aws::GameLift::Model::DescribeMatchmakingRequest& Request, const  Aws::GameLift::Model::DescribeMatchmakingOutcome& Outcome, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& Context)
 {
