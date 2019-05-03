@@ -347,6 +347,8 @@ void FStartGameLiftMatchmaking::AcceptMatch()
 	}
 	Request.SetPlayerIds(AcceptingPlayers);
 	Request.SetAcceptanceType(Aws::GameLift::Model::AcceptanceType::ACCEPT);
+
+	GameLiftClient->AcceptMatch(Request);
 }
 
 void FStartGameLiftMatchmaking::OnGameLiftMatchmakingComplete(const Aws::GameLift::GameLiftClient* Client, const Aws::GameLift::Model::StartMatchmakingRequest& Request, const Aws::GameLift::Model::StartMatchmakingOutcome& Outcome, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& Context)
