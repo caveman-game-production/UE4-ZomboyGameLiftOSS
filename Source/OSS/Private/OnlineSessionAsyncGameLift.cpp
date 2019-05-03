@@ -509,6 +509,7 @@ void FOnlineAsyncTaskStartGameliftMatchmaking::TaskThreadInit()
 			StartMatchmakingObject = GameLiftObject->StartMatchmaking(Subsystem->GetGameLiftMatchmakingConfigName(), PlayerIds, MatchmakingTicket, MatchmakingSettings->GameLiftPlayerAttributes);
 			StartMatchmakingObject->OnStartMatchmakingSuccessDelegate.BindRaw(this, &FOnlineAsyncTaskStartGameliftMatchmaking::OnStartMatchmakingSuccess);
 			StartMatchmakingObject->OnStartMatchmakingFailedDelegate.BindRaw(this, &FOnlineAsyncTaskStartGameliftMatchmaking::OnStartMatchmakingFailed);
+			bMatchAccepted = false;
 			if (StartMatchmakingObject->Activate() != EActivateStatus::ACTIVATE_Success)
 			{
 				FinishTaskThread(false);
@@ -572,21 +573,20 @@ void FOnlineAsyncTaskStartGameliftMatchmaking::OnDescribeMatchmakingSuccess(Aws:
 			}
 		}
 	}
-	else if (Status == Aws::GameLift::Model::MatchmakingConfigurationStatus::REQUIRES_ACCEPTANCE)
+	else
 	{
-		if (!bMatchAccepted)
+		if (Status == Aws::GameLift::Model::MatchmakingConfigurationStatus::REQUIRES_ACCEPTANCE)
 		{
-			if (StartMatchmakingObject.IsValid())
+			if (!bMatchAccepted)
 			{
-				StartMatchmakingObject->AcceptMatch();
-				bMatchAccepted = true;
+				if (StartMatchmakingObject.IsValid())
+				{
+					StartMatchmakingObject->AcceptMatch();
+					bMatchAccepted = true;
+				}
 			}
 		}
 
-		return;
-	}
-	else
-	{
 		if (DescribeMatchmakingObject->Activate() != EActivateStatus::ACTIVATE_Success)
 		{
 			FinishTaskThread(false);
