@@ -443,10 +443,6 @@ void UGameLiftServerOnlineSession::RemovePlayerSession(const FUniqueNetIdRepl& U
 				UE_LOG(GameLiftLog, Log, TEXT("GameLift::Server::RemovePlayerSession with player session id %s"), *SessionId);
 
 				OnlineSubZomboy->GetServerAsyncTaskManager()->AddRemovePlayerSessionRequest(GameLiftSdkModule, SessionId);
-
-				//Aws::GameLift::GenericOutcome ConnectOutcome = Aws::GameLift::Server::RemovePlayerSession(TCHAR_TO_ANSI(*SessionId));
-				/*FGameLiftGenericOutcome DisconnectOutcome = GameLiftSdkModule->RemovePlayerSession(SessionId);
-				PlayerSessions.Remove(UniqueIdStr);*/
 #endif
 			}
 
@@ -710,8 +706,12 @@ void UGameLiftServerOnlineSession::TryStartMatchmakingBackfillRequest()
 	double TimeStamp = FPlatformTime::Seconds();
 
 	bInBackfillFailure = false;
-
+		
 #if WITH_GAMELIFT_SERVER
+
+
+	TArray<FString> TeamNames;
+	PlayerTeamMap.GenerateKeyArray(TeamNames);
 
 	if (FOnlineSubsystemZomboy* OnlineSubZomboy = StaticCast<FOnlineSubsystemZomboy*>(IOnlineSubsystem::Get(FName("Zomboy"))))
 	{
@@ -734,17 +734,16 @@ void UGameLiftServerOnlineSession::TryStartMatchmakingBackfillRequest()
 
 				int PlayerTeamNumber = GetPlayerTeamNumber(PlayerState);
 
-				if (PlayerTeamNumber == 1)
+				if (TeamNames.IsValidIndex(PlayerTeamNumber))
 				{
-					MatchmakingPlayer.m_team = TEXT("red");
-					UE_LOG(LogTemp, Log, TEXT("tryStartMatchmakingBackfillRequest, Player in red team."));
-
+					MatchmakingPlayer.m_team = TeamNames[PlayerTeamNumber];
 				}
 				else
 				{
 					MatchmakingPlayer.m_team = TEXT("blue");
-					UE_LOG(LogTemp, Log, TEXT("tryStartMatchmakingBackfillRequest, Player in blue team."));
 				}
+
+				UE_LOG(LogTemp, Log, TEXT("tryStartMatchmakingBackfillRequest, Player in %s team."), *MatchmakingPlayer.m_team);
 
 				MatchmakingPlayer.m_latencyInMs = GetRegionLatency(GetPlayerRegion(PlayerState));
 

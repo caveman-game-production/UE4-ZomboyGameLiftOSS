@@ -82,7 +82,7 @@ static Aws::Map<Aws::String, int> GetRegionLatencyAWS(EGameLiftRegion Region)
 	{
 		LatencyMap.emplace(TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_NA)), 30);
 		LatencyMap.emplace(TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_EU)), 100);
-		LatencyMap.emplace(TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_APJ)), 150);
+		LatencyMap.emplace(TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_APJ)), 120);
 	}
 	break;
 
@@ -90,7 +90,7 @@ static Aws::Map<Aws::String, int> GetRegionLatencyAWS(EGameLiftRegion Region)
 	{
 		LatencyMap.emplace(TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_EU)), 30);
 		LatencyMap.emplace(TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_NA)), 100);
-		LatencyMap.emplace(TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_APJ)), 150);
+		LatencyMap.emplace(TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_APJ)), 120);
 	}
 	break;
 
@@ -98,7 +98,7 @@ static Aws::Map<Aws::String, int> GetRegionLatencyAWS(EGameLiftRegion Region)
 	{
 		LatencyMap.emplace(TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_APJ)), 30);
 		LatencyMap.emplace(TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_NA)), 100);
-		LatencyMap.emplace(TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_EU)), 150);
+		LatencyMap.emplace(TCHAR_TO_UTF8(GetRegionString(EGameLiftRegion::EGameLiftRegion_EU)), 120);
 	}
 	break;
 
@@ -116,7 +116,7 @@ static TMap<FString, int32> GetRegionLatency(EGameLiftRegion Region)
 	{
 		LatencyMap.Emplace(GetRegionString(EGameLiftRegion::EGameLiftRegion_NA), 30);
 		LatencyMap.Emplace(GetRegionString(EGameLiftRegion::EGameLiftRegion_EU), 100);
-		LatencyMap.Emplace(GetRegionString(EGameLiftRegion::EGameLiftRegion_APJ), 150);
+		LatencyMap.Emplace(GetRegionString(EGameLiftRegion::EGameLiftRegion_APJ), 120);
 	}
 	break;
 
@@ -124,7 +124,7 @@ static TMap<FString, int32> GetRegionLatency(EGameLiftRegion Region)
 	{
 		LatencyMap.Emplace(GetRegionString(EGameLiftRegion::EGameLiftRegion_EU), 30);
 		LatencyMap.Emplace(GetRegionString(EGameLiftRegion::EGameLiftRegion_NA), 100);
-		LatencyMap.Emplace(GetRegionString(EGameLiftRegion::EGameLiftRegion_APJ), 150);
+		LatencyMap.Emplace(GetRegionString(EGameLiftRegion::EGameLiftRegion_APJ), 120);
 	}
 	break;
 
@@ -132,7 +132,7 @@ static TMap<FString, int32> GetRegionLatency(EGameLiftRegion Region)
 	{
 		LatencyMap.Emplace(GetRegionString(EGameLiftRegion::EGameLiftRegion_APJ), 30);
 		LatencyMap.Emplace(GetRegionString(EGameLiftRegion::EGameLiftRegion_NA), 100);
-		LatencyMap.Emplace(GetRegionString(EGameLiftRegion::EGameLiftRegion_EU), 150);
+		LatencyMap.Emplace(GetRegionString(EGameLiftRegion::EGameLiftRegion_EU), 120);
 	}
 	break;
 	}
