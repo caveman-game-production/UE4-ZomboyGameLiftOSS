@@ -298,6 +298,20 @@ void FOnlineAsyncTaskSearchGameliftSession::OnSearchGameSessionsSuccess(const TA
 			SearchResult.Session.NumOpenPublicConnections = GameLiftResult.MaxPlayerCount - GameLiftResult.CurrentPlayerCount;
 			SearchResult.Session.SessionSettings.NumPublicConnections = GameLiftResult.MaxPlayerCount;
 			
+			FOnlineSessionInfoZomboy* SessionInfo = new FOnlineSessionInfoZomboy();
+			SessionInfo->SessionId = FUniqueNetIdString(GameLiftResult.SessionId);
+			SessionInfo->SessionRegion = GameLiftResult.SessionRegion;
+			SessionInfo->HostAddr = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateInternetAddr(0, 0);
+			bool bIsValid;
+			SessionInfo->HostAddr->SetIp(*GameLiftResult.IPAddress, bIsValid);
+			if (!bIsValid)
+			{
+				continue;
+			}
+			SessionInfo->HostAddr->SetPort(GameLiftResult.Port);
+
+			SearchResult.Session.SessionInfo = MakeShareable(SessionInfo);
+
 			for (const auto& ServerDynamicProperty : GameLiftResult.DynamicProperties)
 			{
 				FString PropertyKey = ServerDynamicProperty.Key;
@@ -313,11 +327,6 @@ void FOnlineAsyncTaskSearchGameliftSession::OnSearchGameSessionsSuccess(const TA
 
 				SearchResult.Session.SessionSettings.Set(FName(*PropertyKey), PropertyValue, EOnlineDataAdvertisementType::ViaPingOnly);
 			}
-
-			FOnlineSessionInfoZomboy* SessionInfo = new FOnlineSessionInfoZomboy();
-			SessionInfo->SessionId = FUniqueNetIdString(GameLiftResult.SessionId);
-			SessionInfo->SessionRegion = GameLiftResult.SessionRegion;
-			SearchResult.Session.SessionInfo = MakeShareable(SessionInfo);
 
 			SearchResults.Add(SearchResult);
 		}

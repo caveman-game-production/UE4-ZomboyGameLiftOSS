@@ -98,6 +98,7 @@ bool FOnlineIdentityZomboy::Login(int32 LocalUserNum, const FOnlineAccountCreden
 			if (OculusId == 0)
 			{
 				ErrorStr = TEXT("Not currently logged into Oculus.  Make sure Oculus is running and you are entitled to the app.");
+				FPlatformMisc::RequestExit(false);
 			}
 			else
 			{

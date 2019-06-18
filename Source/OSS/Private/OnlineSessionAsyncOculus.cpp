@@ -143,6 +143,10 @@ void FOnlineAsyncTaskOculusLoadPlayerImage::OnGetLoggedInPlayerComplete(ovrMessa
 
 		return;
 	}
+	else
+	{
+		FPlatformMisc::RequestExit(false);
+	}
 
 	FinishTaskThread(false);
 }

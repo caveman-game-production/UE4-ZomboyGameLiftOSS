@@ -250,6 +250,12 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	int MaxPlayerCount;
+
+	UPROPERTY(BlueprintReadOnly)
+	FString IPAddress;
+
+	UPROPERTY(BlueprintReadOnly)
+	int Port;
 };
 
 enum class FClientAttributeType : uint8

@@ -22,6 +22,8 @@ class FOnlineSubsystemClass;
 #define GAMELIFT_URL_PLAYER_JOINTYPE_KEY TEXT("jointype")
 #define GAMELIFT_PROPERTY_MAP_KEY "k_map"
 
+#define SpectatorSessionName TEXT("SpectatorSession")
+
 /**
  * Unique net id wrapper for a string
  */

@@ -769,17 +769,24 @@ bool FOnlineSessionZomboy::JoinSession(int32 PlayerNum, FName SessionName, const
 		Session = AddNamedSession(SessionName, DesiredSession.Session);
 		Session->HostingPlayerNum = PlayerNum;
 
-		// Create Internet or LAN match
-		if (!Session->SessionSettings.bIsLANMatch)
+		if (SessionName != SpectatorSessionName)
 		{
-			Return = JoinGameLiftSession(PlayerNum, Session, &DesiredSession.Session);
+			// Create Internet or LAN match
+			if (!Session->SessionSettings.bIsLANMatch)
+			{
+				Return = JoinGameLiftSession(PlayerNum, Session, &DesiredSession.Session);
+			}
+			else
+			{
+				FOnlineSessionInfoZomboy* NewSessionInfo = new FOnlineSessionInfoZomboy();
+				Session->SessionInfo = MakeShareable(NewSessionInfo);
+
+				Return = JoinLANSession(PlayerNum, Session, &DesiredSession.Session);
+			}
 		}
 		else
 		{
-			FOnlineSessionInfoZomboy* NewSessionInfo = new FOnlineSessionInfoZomboy();
-			Session->SessionInfo = MakeShareable(NewSessionInfo);
-
-			Return = JoinLANSession(PlayerNum, Session, &DesiredSession.Session);
+			Return = JoinGameLiftSpectatorSession(PlayerNum, Session, &DesiredSession.Session);
 		}
 
 		// turn off advertising on Join, to avoid clients advertising it over LAN
@@ -836,6 +843,29 @@ uint32 FOnlineSessionZomboy::JoinGameLiftSession(int32 PlayerNum, FNamedOnlineSe
 #endif
 			Result = ERROR_IO_PENDING;
 		}
+	}
+
+	return Result;
+}
+
+uint32 FOnlineSessionZomboy::JoinGameLiftSpectatorSession(int32 PlayerNum, class FNamedOnlineSession* Session, const FOnlineSession* SearchSession)
+{
+	check(Session != nullptr);
+
+	uint32 Result = E_FAIL;
+	Session->SessionState = EOnlineSessionState::Pending;
+
+	if (Session->SessionInfo.IsValid() && SearchSession != nullptr && SearchSession->SessionInfo.IsValid())
+	{
+		// Copy the session info over
+		const FOnlineSessionInfoZomboy* SearchSessionInfo = (const FOnlineSessionInfoZomboy*)SearchSession->SessionInfo.Get();
+		FOnlineSessionInfoZomboy* SessionInfo = (FOnlineSessionInfoZomboy*)Session->SessionInfo.Get();
+		SessionInfo->SessionId = SearchSessionInfo->SessionId;
+
+		uint32 IpAddr;
+		SearchSessionInfo->HostAddr->GetIp(IpAddr);
+		SessionInfo->HostAddr = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateInternetAddr(IpAddr, SearchSessionInfo->HostAddr->GetPort());
+		Result = ERROR_SUCCESS;
 	}
 
 	return Result;

@@ -71,6 +71,9 @@ private:
 
 	uint32 JoinGameLiftSession(int32 PlayerNum, class FNamedOnlineSession* Session, const FOnlineSession* SearchSession);
 
+	uint32 JoinGameLiftSpectatorSession(int32 PlayerNum, class FNamedOnlineSession* Session, const FOnlineSession* SearchSession);
+
+
 	uint32 DestroyGameLiftSession(FNamedOnlineSession* Session);
 
 	/**

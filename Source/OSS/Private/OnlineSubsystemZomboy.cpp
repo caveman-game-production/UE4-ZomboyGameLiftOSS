@@ -110,10 +110,10 @@ void ConfigureGameLiftInit(FString& Key, FString& Secret, FString& MatchmakingCo
 
 #else
 	//Enter gamelift accesskey and secret here when you are ready to package.
-	Key = TEXT("Your Key");
-	Secret = TEXT("Your Secret");
-	MatchmakingConfigName = TEXT("Your Matchmaking Config Name");
-	SessionQueueName = TEXT("Your Session Queue Name");
+	Key = TEXT("");
+	Secret = TEXT("");
+	MatchmakingConfigName = TEXT("ContractorsMatchmaker0203");
+	SessionQueueName = TEXT("Contractors0203");
 #endif
 }
 
@@ -257,9 +257,9 @@ void ConfigureSteamInitDevOptions(bool& RequireRelaunch, int32& RelaunchAppId)
 
 #else
 	// Always check against the Steam client when shipping
-	RequireRelaunch = true;
+	RequireRelaunch = false;
 	// Enter shipping app id here
-	RelaunchAppId = 0;
+	RelaunchAppId = 963930;
 #endif
 }
 

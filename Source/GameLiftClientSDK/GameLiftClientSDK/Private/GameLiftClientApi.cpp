@@ -627,6 +627,8 @@ EActivateStatus FGameLiftSearchGameSessions::Activate()
 											SearchResult.SessionRegion = GameLiftRegion;
 											SearchResult.CurrentPlayerCount = AwsGameSession.GetCurrentPlayerSessionCount();
 											SearchResult.MaxPlayerCount = AwsGameSession.GetMaximumPlayerSessionCount();
+											SearchResult.IPAddress = FString(AwsGameSession.GetIpAddress().c_str());
+											SearchResult.Port = AwsGameSession.GetPort();
 
 											LOG_NORMAL("Result Matchmaker data: " + SearchResult.MatchmakerData);
 

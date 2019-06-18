@@ -357,6 +357,16 @@ bool UGameLiftServerOnlineSession::AcceptPlayerSession(const FString& Options, c
 
 	UE_LOG(GameLiftLog, Log, TEXT("GameLift::Server::AcceptPlayerSession with player session id %s"), *PlayerSessionId);
 
+
+	const FString UniqueIdStr = UniqueId.ToString();
+
+	if (UniqueIdStr.Len() <= 0)
+	{
+		return false;
+	}
+
+	UE_LOG(GameLiftLog, Log, TEXT("GameLift::Server::AcceptPlayerSession with player net id %s"), *UniqueIdStr);
+
 #if WITH_GAMELIFT_SERVER
 	FGameLiftGenericOutcome ConnectOutcome = GameLiftSdkModule->AcceptPlayerSession(PlayerSessionId);
 
@@ -370,15 +380,6 @@ bool UGameLiftServerOnlineSession::AcceptPlayerSession(const FString& Options, c
 		UE_LOG(GameLiftLog, Warning, TEXT("GameLift::Server::AcceptPlayerSession failed with error %s"), *LogErrorMessage);
 		return false;
 	}
-
-	const FString UniqueIdStr = UniqueId.ToString();
-
-	if (UniqueIdStr.Len() <= 0)
-	{
-		return false;
-	}
-
-	UE_LOG(GameLiftLog, Log, TEXT("GameLift::Server::AcceptPlayerSession with player net id %s"), *UniqueIdStr);
 
 
 	if (PlayerSessions.Find(UniqueIdStr))
@@ -402,6 +403,8 @@ bool UGameLiftServerOnlineSession::AcceptPlayerSession(const FString& Options, c
 	}
 	else
 	{
+		FGameLiftGenericOutcome DisconnectOutcome = GameLiftSdkModule->RemovePlayerSession(PlayerSessionId);
+
 		UE_LOG(GameLiftLog, Warning, TEXT("GameLift AcceptPlayerSession UniqueId %s has a duplicate player session, dropping connection"), *UniqueIdStr);
 		return false;
 	}
@@ -449,6 +452,8 @@ void UGameLiftServerOnlineSession::RemovePlayerSession(const FUniqueNetIdRepl& U
 			RequestBackfill();
 		}
 	}
+
+	PlayerSessions.Remove(UniqueId.ToString());
 
 	double TimeCollapsed = FPlatformTime::Seconds() - TimeStamp;
 
@@ -713,6 +718,11 @@ void UGameLiftServerOnlineSession::TryStartMatchmakingBackfillRequest()
 	TArray<FString> TeamNames;
 	PlayerTeamMap.GenerateKeyArray(TeamNames);
 
+	for (const FString& TeamNameStr : TeamNames)
+	{
+		UE_LOG(LogTemp, Log, TEXT("We have Team: %s"), *TeamNameStr);
+	}
+
 	if (FOnlineSubsystemZomboy* OnlineSubZomboy = StaticCast<FOnlineSubsystemZomboy*>(IOnlineSubsystem::Get(FName("Zomboy"))))
 	{
 		if (AGameStateBase* GameState = GetGameInstance()->GetWorld()->GetGameState())
@@ -733,6 +743,15 @@ void UGameLiftServerOnlineSession::TryStartMatchmakingBackfillRequest()
 				MatchmakingPlayer.m_playerId = PlayerState->UniqueId.ToString();
 
 				int PlayerTeamNumber = GetPlayerTeamNumber(PlayerState);
+
+			/*	if (PlayerTeamNumber == 1)
+				{
+					MatchmakingPlayer.m_team = TEXT("blue");
+				}
+				else
+				{
+					MatchmakingPlayer.m_team = TEXT("red");
+				}*/
 
 				if (TeamNames.IsValidIndex(PlayerTeamNumber))
 				{

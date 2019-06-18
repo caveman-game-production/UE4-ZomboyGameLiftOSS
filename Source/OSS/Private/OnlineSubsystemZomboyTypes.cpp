@@ -54,9 +54,6 @@ static void WriteRawToTextureDynamic_RenderThread(FTexture2DDynamicResource* Tex
 #endif
 }
 
-
-
-
 UZomboyOSSFunctionLibrary::UZomboyOSSFunctionLibrary(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
