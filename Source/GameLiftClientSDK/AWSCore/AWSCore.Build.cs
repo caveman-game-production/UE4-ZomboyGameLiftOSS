@@ -70,12 +70,20 @@ public class AWSCore : ModuleRules
 			}
 
 			string AWSCoreDLLFile = System.IO.Path.Combine(ThirdPartyPath, "aws-cpp-sdk-core.dll");
-			if (File.Exists(AWSCoreDLLFile))
+            string AWSCommonDLLFile = System.IO.Path.Combine(ThirdPartyPath, "aws-c-common.dll");
+            string AWSStreamDLLFile = System.IO.Path.Combine(ThirdPartyPath, "aws-c-event-stream.dll");
+            string AWSChecksumDLLFile = System.IO.Path.Combine(ThirdPartyPath, "aws-checksums.dll");
+
+            if (File.Exists(AWSCoreDLLFile))
 			{
+                RuntimeDependencies.Add(AWSCommonDLLFile);
+                RuntimeDependencies.Add(AWSStreamDLLFile);
+                RuntimeDependencies.Add(AWSChecksumDLLFile);
+
                 PublicDelayLoadDLLs.Add("aws-cpp-sdk-core.dll");
                 RuntimeDependencies.Add(AWSCoreDLLFile);
-			}
-			else
+            }
+            else
 			{
 				throw new BuildException("aws-cpp-sdk-core.dll not found. Expected in this location: " + AWSCoreDLLFile);
 			}
@@ -90,6 +98,21 @@ public class AWSCore : ModuleRules
 			{
 				File.Copy(System.IO.Path.Combine(ThirdPartyPath, "aws-cpp-sdk-core.dll"), System.IO.Path.Combine(BinariesDirectory, "aws-cpp-sdk-core.dll"));
 			}
+
+            if (File.Exists(System.IO.Path.Combine(BinariesDirectory, "aws-c-common.dll")) == false)
+            {
+                File.Copy(System.IO.Path.Combine(ThirdPartyPath, "aws-c-common.dll"), System.IO.Path.Combine(BinariesDirectory, "aws-c-common.dll"));
+            }
+
+            if (File.Exists(System.IO.Path.Combine(BinariesDirectory, "aws-c-event-stream.dll")) == false)
+            {
+                File.Copy(System.IO.Path.Combine(ThirdPartyPath, "aws-c-event-stream.dll"), System.IO.Path.Combine(BinariesDirectory, "aws-c-event-stream.dll"));
+            }
+
+            if (File.Exists(System.IO.Path.Combine(BinariesDirectory, "aws-checksums.dll")) == false)
+            {
+                File.Copy(System.IO.Path.Combine(ThirdPartyPath, "aws-checksums.dll"), System.IO.Path.Combine(BinariesDirectory, "aws-checksums.dll"));
+            }
         }
-	}
+    }
 }
